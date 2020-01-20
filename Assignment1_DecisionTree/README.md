@@ -24,7 +24,7 @@ where, *A* represents one of the freatures; *D1* and *D2* is the devided sub-dat
 ## Experiment  
 According to homework assignments, 5-fold cross-validation is used to train and test the CART decision tree. What's more, I compare my CART with sklearn.tree.DecisionTreeClassifier(as Benchmark). And the results are close.
 
-What needs to emphasize is that some stop conditions should be set to avoid overfitting. After several attempts, I choose *gini_loss>1e-3*, *max depth of decision tree<3* and *samples>10* as stop condition. 
+What needs to emphasize is that some stop conditions should be set to avoid overfitting. After several attempts, I choose ***gini_loss>1e-3***, ***max depth of decision tree<3*** and ***samples>10*** as stop condition. 
 
 My decision tree:  
 
