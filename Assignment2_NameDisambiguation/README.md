@@ -28,9 +28,9 @@ xx可为train, validate, test.
 
 表格中的各模型思路及设置如下: 
 * Naive Model: 不做任何预测，认为数据集中的论文均为同一个作者完成;  
-* Baseline 1: 
-* Baseline 2:
-* Baseline 3:
+* Baseline 1: 按作者所属Org进行规则划分；
+* Baseline 2: 按共同作者和所属Org进行规则划分；
+* Baseline 3: 以abstract，共同作者，Org为特征，使用TF-IDF组织特征向量，使用DBSCAN进行聚类划分；
 
 
 #### 基于冠军方案的增强模型
@@ -39,8 +39,9 @@ xx可为train, validate, test.
 算法的流程大致如下，将输入paper的属性按照是否需要语义理解分为两部分：离散属性（Orgs, Authors, Year, Venue）;语义属性（Title, Abstract, Key Words). 然后分别采用图神经网络表征离散属性的关系结构，使用DeepWalk和Word2Vec抽取获得paper的关系向量（100d）,至于语义属性则直接在语料集上用skip-gram算法训练词向量（100d)，然后将词向量的平均值作为paper语义的平均值。最后将两特征融合（加权和），使用DBSCAN算法进行求解。最后，启发式地定义文本近似算法，对DBSCAN的聚类后的离散点进行再匹配。
 上述算法的有一些不足：1）基于DeepWalk和Word2Vec得到的关系表征不鲁棒，且其关联较弱（节点值为：文章ID），这是一种弱映射；
 2）特征提取均依赖Word2Vec的无监督训练，文本特征聚合是加和求均值，这种方法对长文本的语义聚合效果很差；  
-针对上述不足，我采取了如下改进：
-1）采用Bagging策略，多次DeepWalk，将训练得到的vec求平均，降低噪音；  
-2）从前一模型得到启发，训练
-Random Search
+针对上述不足，我采取了如下改进：  
+1）采用Bagging策略，多次DeepWalk，将训练得到的vec求平均，降低特征的噪音；  
+2）从前一模型得到启发，训练基于org和联合作者（co-authors)为特征的强关联矩阵分类器，与原来的模型进行Ensemble；
+3）Random Search，进行参数优化搜索；
 
+在训练集抽样
