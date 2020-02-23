@@ -5,13 +5,13 @@
 xx可为train, validate, test.  
 **xx_author.json**: 作者论文集，除已标注的训练数据集，为一级词典，key为作者名，value为列表储存该作者名下所有的Paper ID.
 **xx_pubs.json**: 论文数据集，二级词典，key为Paper ID，value为dict，格式为：
-![avatar](http://baidu.com/pic/doge.png)
+![数据格式示例](https://github.com/k-zha14/WinterCamp/blob/master/Assignment2_NameDisambiguation/dataset_demo.png)
 
 ### 前期数据探索
 首先，对训练集数据进行一定统计和可视化，从而对数据样本的分布和类型尽心一定的了解。
-![训练集文章数](http://baidu.com/pic/doge.png)
+![训练集文章数](https://github.com/k-zha14/WinterCamp/blob/master/Assignment2_NameDisambiguation/train_data.png)
 
-![训练集作者](http://baidu.com/pic/doge.png)
+![训练集作者](https://github.com/k-zha14/WinterCamp/blob/master/Assignment2_NameDisambiguation/train_authors.png)
 
 从上面的两张图可以直观地看出，各作者名下的文章分布极不平衡，在后续处理中需要进行过采样或欠采样处理。以及，**部分作者名下论文为空**，需要对这种边界情况进行考量和处理。
 
@@ -35,7 +35,7 @@ xx可为train, validate, test.
 
 #### 基于冠军方案的增强模型
 在经过一番尝试后，方案1受计算机限制暂时放弃。借鉴方案1的一些思路和实验结果，我尝试在乔子越团队的冠军方案的机场上进行进一步的改进。原冠军方案的架构如下图所示：
-![冠军方案](http://baidu.com/pic/doge.png)
+![冠军方案](https://github.com/k-zha14/WinterCamp/blob/master/Assignment2_NameDisambiguation/championPlan.png)
 算法的流程大致如下，将输入paper的属性按照是否需要语义理解分为两部分：离散属性（Orgs, Authors, Year, Venue）;语义属性（Title, Abstract, Key Words). 然后分别采用图神经网络表征离散属性的关系结构，使用DeepWalk和Word2Vec抽取获得paper的关系向量（100d）,至于语义属性则直接在语料集上用skip-gram算法训练词向量（100d)，然后将词向量的平均值作为paper语义的平均值。最后将两特征融合（加权和），使用DBSCAN算法进行求解。最后，启发式地定义文本近似算法，对DBSCAN的聚类后的离散点进行再匹配。
 上述算法的有一些不足：1）基于DeepWalk和Word2Vec得到的关系表征不鲁棒，且其关联较弱（节点值为：文章ID），这是一种弱映射；
 2）特征提取均依赖Word2Vec的无监督训练，文本特征聚合是加和求均值，这种方法对长文本的语义聚合效果很差；  
